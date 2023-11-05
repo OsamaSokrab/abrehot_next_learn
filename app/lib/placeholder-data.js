@@ -9,80 +9,7 @@ const users = [
   },
 ];
 
-const tasks = [
-  {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'abrehot',
-    status: 'done',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4272-9855-fec4b6a6442a',
-    name: 'Check Mohamed Mahjoub got birth certificates',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4273-9855-fec4b6a6442a',
-    name: 'Check authentication of employment letter',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4241-9855-fec4b6a6442a',
-    name: 'Get Money from Loay',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4242-9855-fec4b6a6442a',
-    name: 'Authentication of birth certificates',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4243-9855-fec4b6a6442a',
-    name: 'Send birth certificates to Qatar',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4243-9855-fec4b6a6442a',
-    name: 'Start Dataflow',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4244-9855-fec4b6a6442a',
-    name: 'Renew immigration passport',
-    status: 'pending',
-    date: '2023-11-28',
-  },
-  {
-    id: '410544b2-4001-4245-9855-fec4b6a6442a',
-    name: 'Yara printout',
-    status: 'pending',
-    date: '2023-11-07',
-  },
-  {
-    id: '410544b2-4001-4246-9855-fec4b6a6442a',
-    name: 'Check DV Lottery',
-    status: 'pending',
-    date: '2024-05-05',
-  },
-  {
-    id: '410544b2-4001-4247-9855-fec4b6a6442a',
-    name: 'Call Maysa: car, house, bank account',
-    status: 'pending',
-    date: '2023-11-06',
-  },
-  {
-    id: '410544b2-4001-4248-9855-fec4b6a6442a',
-    name: 'Pay Mojahed Fees',
-    status: 'pending',
-    date: '2023-11-07',
-  },
-];
+
 
 const customers = [
   {
@@ -144,6 +71,81 @@ const customers = [
     name: 'Balazs Orban',
     email: 'balazs@orban.com',
     image_url: '/customers/balazs-orban.png',
+  },
+];
+
+const tasks = [
+  {
+    customer_id: customers[1].id,
+    taskName: 'abrehot',
+    taskStatus: 'done',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[3].id,
+    taskName: 'Check Mohamed Mahjoub got birth certificates',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[4].id,
+    taskName: 'Check authentication of employment letter',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[5].id,
+    taskName: 'Get Money from Loay',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[0].id,
+    taskName: 'Authentication of birth certificates',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[1].id,
+    taskName: 'Send birth certificates to Qatar',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[2].id,
+    taskName: 'Start Dataflow',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[4].id,
+    taskName: 'Renew immigration passport',
+    taskStatus: 'pending',
+    date: '2023-11-28',
+  },
+  {
+    customer_id: customers[0].id,
+    taskName: 'Yara printout',
+    taskStatus: 'pending',
+    date: '2023-11-07',
+  },
+  {
+    customer_id: customers[1].id,
+    taskName: 'Check DV Lottery',
+    taskStatus: 'pending',
+    date: '2024-05-05',
+  },
+  {
+    customer_id: customers[3].id,
+    taskName: 'Call Maysa: car, house, bank account',
+    taskStatus: 'pending',
+    date: '2023-11-06',
+  },
+  {
+    customer_id: customers[4].id,
+    taskName: 'Pay Mojahed Fees',
+    taskStatus: 'pending',
+    date: '2023-11-07',
   },
 ];
 

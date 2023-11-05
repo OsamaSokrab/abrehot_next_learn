@@ -67,9 +67,13 @@ export type CustomersTable = {
 
 export type TasksTable = {
   id: string;
+  customer_id: string;
   name: string;
-  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  email: string;
+  image_url: string;
   date: string;
+  taskName: string;
+  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
 };
 
 export type FormattedCustomersTable = {
@@ -84,8 +88,9 @@ export type FormattedCustomersTable = {
 
 export type FormattedTasksTable = {
   id: string;
-  name: string;
-  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  customer_id: string;
+  taskName: string;
+  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
   date: string;
 };
 
@@ -99,4 +104,11 @@ export type InvoiceForm = {
   customer_id: string;
   amount: number;
   status: 'pending' | 'paid';
+};
+
+export type TaskForm = {
+  id: string;
+  customer_id: string;
+  taskName: number;
+  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
 };

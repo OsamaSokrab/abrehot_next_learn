@@ -134,8 +134,9 @@ async function seedTasks(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS tasks (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        status VARCHAR(255) NOT NULL,
+        customer_id UUID NOT NULL,
+        taskName VARCHAR(255) NOT NULL,
+        taskStatus VARCHAR(255) NOT NULL,
         date DATE NOT NULL
       );
     `;
@@ -146,8 +147,8 @@ async function seedTasks(client) {
     const insertedTasks = await Promise.all(
       tasks.map(
         (task) => client.sql`
-        INSERT INTO tasks (id, name, status, date)
-        VALUES (${task.id}, ${task.name}, ${task.status}, ${task.date})
+        INSERT INTO tasks (customer_id, taskName, taskStatus, date)
+        VALUES (${task.customer_id}, ${task.taskName}, ${task.taskStatus}, ${task.date})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
@@ -204,7 +205,7 @@ async function main() {
   const client = await db.connect();
 
   // await seedUsers(client);
-  // await seedCustomers(client);
+  await seedCustomers(client);
   // await seedInvoices(client);
   // await seedRevenue(client);
   await seedTasks(client);

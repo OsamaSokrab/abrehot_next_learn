@@ -8,6 +8,7 @@ import {
   User,
   Revenue,
   TasksTable,
+  TaskForm,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -92,6 +93,7 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
+
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
@@ -150,6 +152,28 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
+export async function fetchTasksPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM tasks
+    JOIN customers ON tasks.customer_id = customers.id
+    WHERE
+      customers.name ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`} OR
+      tasks.taskName ILIKE ${`%${query}%`} OR
+      tasks.date::text ILIKE ${`%${query}%`} OR
+      tasks.taskStatus ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of tasks.');
+  }
+}
+
 export async function fetchInvoiceById(id: string) {
   noStore();
   try {
@@ -173,6 +197,30 @@ export async function fetchInvoiceById(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
+  }
+}
+
+export async function fetchTaskById(id: string) {
+  noStore();
+  try {
+    const data = await sql<TaskForm>`
+      SELECT
+        tasks.id,
+        tasks.customer_id,
+        tasks.taskName,
+        tasks.taskStatus
+      FROM tasks
+      WHERE tasks.id = ${id};
+    `;
+
+    const task = data.rows.map((task) => ({
+      ...task,
+    }));
+
+    return task[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch task.');
   }
 }
 
@@ -228,29 +276,39 @@ export async function fetchFilteredCustomers(query: string) {
   }
 }
 
-export async function fetchFilteredTasks(query: string) {
+export async function fetchFilteredTasks(
+  query: string,
+  currentPage: number,
+) {
   noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
   try {
-    const data = await sql<TasksTable>`
+    const tasks = await sql<TasksTable>`
 		SELECT
-		  tasks.id,
-		  tasks.name,
-		  tasks.status,
-      tasks.date
+      tasks.id,
+		  tasks.taskName,
+      tasks.date,
+		  tasks.taskStatus,
+      customers.name,
+      customers.email,
+      customers.image_url
 		FROM tasks
+    JOIN customers ON tasks.customer_id = customers.id
     WHERE
-		  tasks.name ILIKE ${`%${query}%`}
-		  ORDER BY tasks.date ASC
+		  customers.name ILIKE ${`%${query}%`} OR
+		  customers.email ILIKE ${`%${query}%`} OR
+		  tasks.taskName ILIKE ${`%${query}%`} OR
+		  tasks.date::text ILIKE ${`%${query}%`} OR
+		  tasks.taskStatus ILIKE ${`%${query}%`} 
+		  ORDER BY tasks.date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
 
-    const tasks = data.rows.map((task) => ({
-      ...task
-    }))
-
-    return tasks;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch tasks table.');
+    return tasks.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch tasks.');
   }
 }
 

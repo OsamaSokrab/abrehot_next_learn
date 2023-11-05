@@ -17,13 +17,19 @@ const FormSchema = z.object({
   status: z.enum(['pending', 'paid'], {
     invalid_type_error: 'Please select an invoice status.',
   }),
+  taskName: z.string({ invalid_type_error: 'Please enter a task' }),
+  taskStatus: z.enum(['pending', 'done', 'delayed', 'cancelled'], {
+    invalid_type_error: 'Please select a task status'
+  }),
   date: z.string(),
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ date: true, id: true });
+const CreateTask = FormSchema.omit({ id: true, amount: true, status: true, date: true })
+const UpdateTask = FormSchema.omit({ id: true, amount: true, status: true, date: true })
 
-// This is temporary
+// This is temporary for invoices
 export type State = {
   errors?: {
     customerId?: string[];
@@ -32,6 +38,17 @@ export type State = {
   };
   message?: string | null;
 };
+
+// This is temporary for tasks
+export type StateTasks = {
+  errors?: {
+    customerId?: string[];
+    taskName?: string[];
+    taskStatus?: string[];
+  };
+  message?: string | null;
+};
+
 
 export async function createInvoice(prevState: State, formData: FormData) {
   // Validate form fields using Zod
@@ -72,6 +89,44 @@ export async function createInvoice(prevState: State, formData: FormData) {
   redirect('/dashboard/invoices');
 }
 
+export async function createTask(prevState: StateTasks, formData: FormData) {
+  // Validate form fields using Zod
+  const validatedFields = CreateTask.safeParse({
+    customerId: formData.get('customerId'),
+    taskName: formData.get('taskName'),
+    taskStatus: formData.get('taskStatus'),
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Task.',
+    };
+  }
+
+  // Prepare data for insertion into the database
+  const { customerId, taskName, taskStatus } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
+
+  // Insert data into the database
+  try {
+    await sql`
+      INSERT INTO tasks (customer_id, taskName, taskStatus, date)
+      VALUES (${customerId}, ${taskName}, ${taskStatus}, ${date})
+    `;
+  } catch (error) {
+    // If a database error occurs, return a more specific error.
+    return {
+      message: 'Database Error: Failed to Create Task.',
+    };
+  }
+
+  // Revalidate the cache for the invoices page and redirect the user.
+  revalidatePath('/dashboard/tasks');
+  redirect('/dashboard/tasks');
+}
+
 export async function updateInvoice(
   id: string,
   prevState: State,
@@ -107,6 +162,40 @@ export async function updateInvoice(
   redirect('/dashboard/invoices');
 }
 
+export async function updateTask(
+  id: string,
+  prevState: StateTasks,
+  formData: FormData,
+) {
+  const validatedFields = UpdateTask.safeParse({
+    customerId: formData.get('customerId'),
+    taskName: formData.get('taskName'),
+    taskStatus: formData.get('taskStatus'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Task.',
+    };
+  }
+
+  const { customerId, taskName, taskStatus } = validatedFields.data;
+
+  try {
+    await sql`
+      UPDATE tasks
+      SET customer_id = ${customerId}, taskName = ${taskName}, taskStatus = ${taskStatus}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Task.' };
+  }
+
+  revalidatePath('/dashboard/tasks');
+  redirect('/dashboard/tasks');
+}
+
 export async function deleteInvoice(id: string) {
   // throw new Error('Failed to Delete Invoice');
 
@@ -116,6 +205,18 @@ export async function deleteInvoice(id: string) {
     return { message: 'Deleted Invoice' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Invoice.' };
+  }
+}
+
+export async function deleteTask(id: string) {
+  // throw new Error('Failed to Delete Task');
+
+  try {
+    await sql`DELETE FROM tasks WHERE id = ${id}`;
+    revalidatePath('/dashboard/tasks');
+    return { message: 'Deleted Task' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Task.' };
   }
 }
 
