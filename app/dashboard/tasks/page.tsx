@@ -1,4 +1,4 @@
-import Pagination from '@/app/ui/invoices/pagination';
+import Pagination from '@/app/ui/tasks/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/tasks/table';
 import { CreateTask } from '@/app/ui/tasks/buttons';
