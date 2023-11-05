@@ -65,6 +65,13 @@ export type CustomersTable = {
   total_paid: number;
 };
 
+export type TasksTable = {
+  id: string;
+  name: string;
+  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  date: string;
+};
+
 export type FormattedCustomersTable = {
   id: string;
   name: string;
@@ -73,6 +80,13 @@ export type FormattedCustomersTable = {
   total_invoices: number;
   total_pending: string;
   total_paid: string;
+};
+
+export type FormattedTasksTable = {
+  id: string;
+  name: string;
+  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  date: string;
 };
 
 export type CustomerField = {

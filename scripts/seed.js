@@ -4,6 +4,7 @@ const {
   customers,
   revenue,
   users,
+  tasks,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -125,6 +126,45 @@ async function seedCustomers(client) {
   }
 }
 
+async function seedTasks(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    // Create the "tasks" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS tasks (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        status VARCHAR(255) NOT NULL,
+        date DATE NOT NULL
+      );
+    `;
+
+    console.log(`Created "tasks" table`);
+
+    // Insert data into the "tasks" table
+    const insertedTasks = await Promise.all(
+      tasks.map(
+        (task) => client.sql`
+        INSERT INTO tasks (id, name, status, date)
+        VALUES (${task.id}, ${task.name}, ${task.status}, ${task.date})
+        ON CONFLICT (id) DO NOTHING;
+      `,
+      ),
+    );
+
+    console.log(`Seeded ${insertedTasks.length} tasks`);
+
+    return {
+      createTable,
+      tasks: insertedTasks,
+    };
+  } catch (error) {
+    console.error('Error seeding tasks:', error);
+    throw error;
+  }
+}
+
 async function seedRevenue(client) {
   try {
     // Create the "revenue" table if it doesn't exist
@@ -167,6 +207,7 @@ async function main() {
   // await seedCustomers(client);
   // await seedInvoices(client);
   // await seedRevenue(client);
+  await seedTasks(client);
 
   await client.end();
 }

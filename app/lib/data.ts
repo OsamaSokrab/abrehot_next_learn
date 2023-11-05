@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  TasksTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -224,6 +225,48 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function fetchFilteredTasks(query: string) {
+  noStore();
+  try {
+    const data = await sql<TasksTable>`
+		SELECT
+		  tasks.id,
+		  tasks.name,
+		  tasks.status,
+      tasks.date
+		FROM tasks
+    WHERE
+		  tasks.name ILIKE ${`%${query}%`}
+		  ORDER BY tasks.date ASC
+	  `;
+
+    const tasks = data.rows.map((task) => ({
+      ...task
+    }))
+
+    return tasks;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch tasks table.');
+  }
+}
+
+export async function fetchTasks() {
+  try {
+    const tasks = await sql`
+    SELECT
+		  tasks.id,
+		  tasks.name,
+		  tasks.status,
+		  tasks.date
+		FROM tasks`;
+    return tasks.rows;
+  } catch (error) {
+    console.error('Failed to fetch tasks:', error);
+    throw new Error('Failed to fetch tasks.');
   }
 }
 
