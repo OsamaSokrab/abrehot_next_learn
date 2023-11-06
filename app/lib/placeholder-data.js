@@ -9,8 +9,6 @@ const users = [
   },
 ];
 
-
-
 const customers = [
   {
     id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
@@ -74,77 +72,90 @@ const customers = [
   },
 ];
 
+const exLinks = [
+  {
+    id: '410544b2-4001-4221-9855-fec4b6a6442a',
+    customer_id: customers[1].id,
+    title: 'TypeScript Handbook',
+    url: 'https://www.typescriptlang.org/docs/handbook',
+    root: 'digital Health',
+    stem: 'web development',
+    branch: 'progrmming language',
+    leaf: 'typescript'
+  },
+];
+
 const tasks = [
   {
     customer_id: customers[1].id,
-    taskName: 'abrehot',
-    taskStatus: 'done',
+    task: 'abrehot',
+    status: 'done',
     date: '2023-11-06',
   },
   {
     customer_id: customers[3].id,
-    taskName: 'Check Mohamed Mahjoub got birth certificates',
-    taskStatus: 'pending',
+    task: 'Check Mohamed Mahjoub got birth certificates',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[4].id,
-    taskName: 'Check authentication of employment letter',
-    taskStatus: 'pending',
+    task: 'Check authentication of employment letter',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[5].id,
-    taskName: 'Get Money from Loay',
-    taskStatus: 'pending',
+    task: 'Get Money from Loay',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[0].id,
-    taskName: 'Authentication of birth certificates',
-    taskStatus: 'pending',
+    task: 'Authentication of birth certificates',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[1].id,
-    taskName: 'Send birth certificates to Qatar',
-    taskStatus: 'pending',
+    task: 'Send birth certificates to Qatar',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[2].id,
-    taskName: 'Start Dataflow',
-    taskStatus: 'pending',
+    task: 'Start Dataflow',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[4].id,
-    taskName: 'Renew immigration passport',
-    taskStatus: 'pending',
+    task: 'Renew immigration passport',
+    status: 'pending',
     date: '2023-11-28',
   },
   {
     customer_id: customers[0].id,
-    taskName: 'Yara printout',
-    taskStatus: 'pending',
+    task: 'Yara printout',
+    status: 'pending',
     date: '2023-11-07',
   },
   {
     customer_id: customers[1].id,
-    taskName: 'Check DV Lottery',
-    taskStatus: 'pending',
+    task: 'Check DV Lottery',
+    status: 'pending',
     date: '2024-05-05',
   },
   {
     customer_id: customers[3].id,
-    taskName: 'Call Maysa: car, house, bank account',
-    taskStatus: 'pending',
+    task: 'Call Maysa: car, house, bank account',
+    status: 'pending',
     date: '2023-11-06',
   },
   {
     customer_id: customers[4].id,
-    taskName: 'Pay Mojahed Fees',
-    taskStatus: 'pending',
+    task: 'Pay Mojahed Fees',
+    status: 'pending',
     date: '2023-11-07',
   },
 ];
@@ -263,4 +274,5 @@ module.exports = {
   invoices,
   revenue,
   tasks,
+  exLinks,
 };

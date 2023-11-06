@@ -5,6 +5,7 @@ const {
   revenue,
   users,
   tasks,
+  exLinks,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -43,6 +44,48 @@ async function seedUsers(client) {
     };
   } catch (error) {
     console.error('Error seeding users:', error);
+    throw error;
+  }
+}
+
+async function seedExlinks(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "exlinks" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS exlinks (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        customer_id UUID NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        url TEXT NOT NULL ,
+        root TEXT NOT NULL,
+        stem TEXT NOT NULL,
+        branch TEXT NOT NULL,
+        leaf TEXT NOT NULL
+      );
+    `;
+
+    console.log(`Created "exlinks" table`);
+
+    // Insert data into the "users" table
+    const insertedExlinks = await Promise.all(
+      exLinks.map(async (exlink) => {
+        return client.sql`
+        INSERT INTO exlinks (id, name, url, root, stem, branch, leaf)
+        VALUES (${exlink.id}, ${exlink.name}, ${exlink.url}, ${exlink.root}, ${exlink.stem}, ${exlink.branch}, ${exlink.leaf})
+        ON CONFLICT (id) DO NOTHING;
+      `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedExlinks.length} external links`);
+
+    return {
+      createTable,
+      users: insertedExlinks,
+    };
+  } catch (error) {
+    console.error('Error seeding exlinks:', error);
     throw error;
   }
 }
@@ -135,8 +178,8 @@ async function seedTasks(client) {
       CREATE TABLE IF NOT EXISTS tasks (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         customer_id UUID NOT NULL,
-        taskName VARCHAR(255) NOT NULL,
-        taskStatus VARCHAR(255) NOT NULL,
+        task VARCHAR(255) NOT NULL,
+        status VARCHAR(255) NOT NULL,
         date DATE NOT NULL
       );
     `;
@@ -147,8 +190,8 @@ async function seedTasks(client) {
     const insertedTasks = await Promise.all(
       tasks.map(
         (task) => client.sql`
-        INSERT INTO tasks (customer_id, taskName, taskStatus, date)
-        VALUES (${task.customer_id}, ${task.taskName}, ${task.taskStatus}, ${task.date})
+        INSERT INTO tasks (customer_id, task, status, date)
+        VALUES (${task.customer_id}, ${task.task}, ${task.status}, ${task.date})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
@@ -205,10 +248,11 @@ async function main() {
   const client = await db.connect();
 
   // await seedUsers(client);
-  await seedCustomers(client);
+  // await seedCustomers(client);
   // await seedInvoices(client);
   // await seedRevenue(client);
-  await seedTasks(client);
+  // await seedTasks(client);
+  // await seedExlinks(client);
 
   await client.end();
 }

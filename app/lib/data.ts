@@ -9,6 +9,8 @@ import {
   Revenue,
   TasksTable,
   TaskForm,
+  ExlinksForm,
+  ExlinksTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -130,6 +132,48 @@ export async function fetchFilteredInvoices(
   }
 }
 
+export async function fetchFilteredExlinks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const links = await sql<ExlinksTable>`
+      SELECT
+        exlinks.id,
+        exlinks.title,
+        exlinks.url,
+        exlinks.root,
+        exlinks.stem,
+        exlinks.branch,
+        exlinks.leaf,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM exlinks
+      JOIN customers ON exlinks.customer_id = customers.id
+      WHERE
+        customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        exlinks.title ILIKE ${`%${query}%`} OR
+        exlinks.url ILIKE ${`%${query}%`} OR
+        exlinks.root ILIKE ${`%${query}%`} OR
+        exlinks.stem ILIKE ${`%${query}%`} OR
+        exlinks.branch ILIKE ${`%${query}%`} OR
+        exlinks.leaf ILIKE ${`%${query}%`}
+      ORDER BY exlinks.root, exlinks.stem, exlinks.branch, exlinks.leaf 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return links.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch external links.');
+  }
+}
+
 export async function fetchInvoicesPages(query: string) {
   noStore();
   try {
@@ -152,6 +196,31 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
+export async function fetchExlinksPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM exlinks
+    JOIN customers ON exlinks.customer_id = customers.id
+    WHERE
+      customers.name ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`} OR
+      exlinks.title ILIKE ${`%${query}%`} OR
+      exlinks.url ILIKE ${`%${query}%`} OR
+      exlinks.root ILIKE ${`%${query}%`} OR
+      exlinks.stem ILIKE ${`%${query}%`} OR
+      exlinks.branch ILIKE ${`%${query}%`} OR
+      exlinks.leaf ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of external links.');
+  }
+}
+
 export async function fetchTasksPages(query: string) {
   noStore();
   try {
@@ -161,9 +230,9 @@ export async function fetchTasksPages(query: string) {
     WHERE
       customers.name ILIKE ${`%${query}%`} OR
       customers.email ILIKE ${`%${query}%`} OR
-      tasks.taskName ILIKE ${`%${query}%`} OR
+      tasks.task ILIKE ${`%${query}%`} OR
       tasks.date::text ILIKE ${`%${query}%`} OR
-      tasks.taskStatus ILIKE ${`%${query}%`}
+      tasks.status ILIKE ${`%${query}%`}
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
@@ -200,6 +269,34 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
+export async function fetchExlinkById(id: string) {
+  noStore();
+  try {
+    const data = await sql<ExlinksForm>`
+      SELECT
+        exlinks.id,
+        exlinks.customer_id,
+        exlinks.title,
+        exlinks.url,
+        exlinks.root,
+        exlinks.stem,
+        exlinks.branch,
+        exlinks.leaf
+      FROM exlinks
+      WHERE exlinks.id = ${id};
+    `;
+
+    const link = data.rows.map((link) => ({
+      ...link
+    }));
+
+    return link[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch link.');
+  }
+}
+
 export async function fetchTaskById(id: string) {
   noStore();
   try {
@@ -207,8 +304,8 @@ export async function fetchTaskById(id: string) {
       SELECT
         tasks.id,
         tasks.customer_id,
-        tasks.taskName,
-        tasks.taskStatus
+        tasks.task,
+        tasks.status
       FROM tasks
       WHERE tasks.id = ${id};
     `;
@@ -287,9 +384,9 @@ export async function fetchFilteredTasks(
     const tasks = await sql<TasksTable>`
 		SELECT
       tasks.id,
-		  tasks.taskName,
+		  tasks.task,
       tasks.date,
-		  tasks.taskStatus,
+		  tasks.status,
       customers.name,
       customers.email,
       customers.image_url
@@ -298,9 +395,9 @@ export async function fetchFilteredTasks(
     WHERE
 		  customers.name ILIKE ${`%${query}%`} OR
 		  customers.email ILIKE ${`%${query}%`} OR
-		  tasks.taskName ILIKE ${`%${query}%`} OR
+		  tasks.task ILIKE ${`%${query}%`} OR
 		  tasks.date::text ILIKE ${`%${query}%`} OR
-		  tasks.taskStatus ILIKE ${`%${query}%`} 
+		  tasks.status ILIKE ${`%${query}%`} 
 		  ORDER BY tasks.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
@@ -317,7 +414,7 @@ export async function fetchTasks() {
     const tasks = await sql`
     SELECT
 		  tasks.id,
-		  tasks.name,
+		  tasks.task,
 		  tasks.status,
 		  tasks.date
 		FROM tasks`;

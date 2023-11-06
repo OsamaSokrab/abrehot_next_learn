@@ -9,6 +9,17 @@ export type User = {
   password: string;
 };
 
+export type exLinks = {
+  id: string;
+  customer_id: string;
+  title: string;
+  url: string;
+  root: string;
+  stem: string;
+  branch: string;
+  leaf: string;
+};
+
 export type Customer = {
   id: string;
   name: string;
@@ -55,6 +66,20 @@ export type InvoicesTable = {
   status: 'pending' | 'paid';
 };
 
+export type ExlinksTable = {
+  id: string;
+  customer_id: string;
+  name: string;
+  email: string;
+  image_url: string;
+  title: string;
+  url: string;
+  root: string;
+  stem: string;
+  branch: string;
+  leaf: string;
+};
+
 export type CustomersTable = {
   id: string;
   name: string;
@@ -72,8 +97,8 @@ export type TasksTable = {
   email: string;
   image_url: string;
   date: string;
-  taskName: string;
-  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
+  task: string;
+  status: 'pending' | 'done' | 'delayed' | 'cancelled';
 };
 
 export type FormattedCustomersTable = {
@@ -89,8 +114,8 @@ export type FormattedCustomersTable = {
 export type FormattedTasksTable = {
   id: string;
   customer_id: string;
-  taskName: string;
-  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
+  task: string;
+  status: 'pending' | 'done' | 'delayed' | 'cancelled';
   date: string;
 };
 
@@ -106,9 +131,20 @@ export type InvoiceForm = {
   status: 'pending' | 'paid';
 };
 
+export type ExlinksForm = {
+  id: string;
+  customer_id: string;
+  title: string;
+  url: string;
+  root: string;
+  stem: string;
+  branch: string;
+  leaf: string;
+};
+
 export type TaskForm = {
   id: string;
   customer_id: string;
-  taskName: number;
-  taskStatus: 'pending' | 'done' | 'delayed' | 'cancelled';
+  task: number;
+  status: 'pending' | 'done' | 'delayed' | 'cancelled';
 };
