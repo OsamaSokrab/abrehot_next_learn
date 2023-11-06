@@ -64,24 +64,24 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="taskName"
-                                name="taskName"
+                                id="task"
+                                name="task"
                                 type="text"
                                 step="0.01"
                                 placeholder="Enter a task"
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                                aria-describedby="taskName-error"
+                                aria-describedby="task-error"
                             />
                         </div>
                     </div>
 
-                    {state.errors?.taskName ? (
+                    {state.errors?.task ? (
                         <div
-                            id="taskName-error"
+                            id="task-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.taskName.map((error: string) => (
+                            {state.errors.task.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
