@@ -1,21 +1,21 @@
-import Form from '@/app/ui/tasks/edit-form'
+import Form from '@/app/ui/resources/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchTaskById, fetchCustomers } from '@/app/lib/tasks/data';
+import { fetchResourceById, fetchCustomers } from '@/app/lib/resources/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Edit Task',
+    title: 'Edit Resource',
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
-    const [task, customers] = await Promise.all([
-        fetchTaskById(id),
+    const [link, customers] = await Promise.all([
+        fetchResourceById(id),
         fetchCustomers(),
     ]);
 
-    if (!task) {
+    if (!link) {
         notFound();
     }
 
@@ -23,15 +23,15 @@ export default async function Page({ params }: { params: { id: string } }) {
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: 'Tasks', href: '/dashboard/tasks' },
+                    { label: 'Resources', href: '/dashboard/resources' },
                     {
-                        label: 'Edit Task',
-                        href: `/dashboard/tasks/${id}/edit`,
+                        label: 'Edit Link',
+                        href: `/dashboard/resources/${id}/edit`,
                         active: true,
                     },
                 ]}
             />
-            <Form task={task} customers={customers} />
+            <Form link={link} customers={customers} />
         </main>
     );
 }
