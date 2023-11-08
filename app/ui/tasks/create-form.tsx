@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
+import { CustomerField } from '@/app/lib/tasks/definitions';
 import Link from 'next/link';
 import {
     CheckIcon,
@@ -8,12 +8,12 @@ import {
     UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createTask } from '@/app/lib/actions';
+import { createTask } from '@/app/lib/tasks/actions';
 import { useFormState } from 'react-dom';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
     const initialState = { message: null, errors: {} };
-    const [stateTasks, dispatch] = useFormState(createTask, initialState);
+    const [state, dispatch] = useFormState(createTask, initialState);
 
     return (
         <form action={dispatch}>
@@ -43,13 +43,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                         <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
                     </div>
 
-                    {stateTasks.errors?.customerId ? (
+                    {state.errors?.customerId ? (
                         <div
                             id="customer-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {stateTasks.errors.customerId.map((error: string) => (
+                            {state.errors.customerId.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
@@ -75,13 +75,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                         </div>
                     </div>
 
-                    {stateTasks.errors?.task ? (
+                    {state.errors?.task ? (
                         <div
                             id="task-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {stateTasks.errors.task.map((error: string) => (
+                            {state.errors.task.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
@@ -98,7 +98,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="pending"
-                                    name="taskstatus"
+                                    name="status"
                                     type="radio"
                                     value="pending"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -113,7 +113,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="done"
-                                    name="taskstatus"
+                                    name="status"
                                     type="radio"
                                     value="done"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -128,7 +128,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="delayed"
-                                    name="taskstatus"
+                                    name="status"
                                     type="radio"
                                     value="delayed"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -143,7 +143,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="cancelled"
-                                    name="taskstatus"
+                                    name="status"
                                     type="radio"
                                     value="cancelled"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -157,22 +157,22 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             </div>
                         </div>
                     </div>
-                    {stateTasks.errors?.taskstatus ? (
+                    {state.errors?.status ? (
                         <div
-                            aria-describedby="taskstatus-error"
+                            aria-describedby="status-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {stateTasks.errors.taskstatus.map((error: string) => (
+                            {state.errors.status.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
                     ) : null}
                 </fieldset>
 
-                {stateTasks.message ? (
+                {state.message ? (
                     <div aria-live="polite" className="my-2 text-sm text-red-500">
-                        <p>{stateTasks.message}</p>
+                        <p>{state.message}</p>
                     </div>
                 ) : null}
             </div>

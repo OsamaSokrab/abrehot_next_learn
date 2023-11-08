@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { UpdateTask, DeleteTask } from '@/app/ui/tasks/buttons';
-import TaskStatus from '@/app/ui/tasks/status';
+import Status from '@/app/ui/tasks/status';
 import { formatDateToLocal } from '@/app/lib/utils';
-import { fetchFilteredTasks } from '@/app/lib/data';
+import { fetchFilteredTasks } from '@/app/lib/tasks/data';
 
 export default async function TasksTable({
     query,
@@ -37,7 +37,7 @@ export default async function TasksTable({
                                         </div>
                                         <p className="text-sm text-gray-500">{task.email}</p>
                                     </div>
-                                    <TaskStatus status={task.status} />
+                                    <Status status={task.status} />
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
                                     <div>
@@ -105,7 +105,7 @@ export default async function TasksTable({
                                         {formatDateToLocal(task.date)}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
-                                        <TaskStatus status={task.status} />
+                                        <Status status={task.status} />
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">

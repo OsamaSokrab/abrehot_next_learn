@@ -5,7 +5,7 @@ import { CreateTask } from '@/app/ui/tasks/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { TasksTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchTasksPages } from '@/app/lib/data';
+import { fetchTasksPages } from '@/app/lib/tasks/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

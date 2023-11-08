@@ -22,7 +22,7 @@ const links = [
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Tasks', href: '/dashboard/tasks', icon: RectangleStackIcon },
-  { name: 'External Links', href: '/dashboard/external_links', icon: LinkIcon },
+  { name: 'Resources', href: '/dashboard/resources', icon: LinkIcon },
 ];
 
 export default function NavLinks() {

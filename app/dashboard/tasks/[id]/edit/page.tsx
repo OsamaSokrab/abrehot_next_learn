@@ -1,6 +1,6 @@
 import Form from '@/app/ui/tasks/edit-form'
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchTaskById, fetchCustomers } from '@/app/lib/data';
+import { fetchTaskById, fetchCustomers } from '@/app/lib/resources/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 

@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteTask } from '@/app/lib/actions';
+import { deleteTask } from '@/app/lib/tasks/actions';
 
 export function CreateTask() {
     return (
