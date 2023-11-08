@@ -98,7 +98,7 @@ export type TasksTable = {
   image_url: string;
   date: string;
   task: string;
-  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  taskstatus: 'pending' | 'done' | 'delayed' | 'cancelled';
 };
 
 export type FormattedCustomersTable = {
@@ -115,7 +115,7 @@ export type FormattedTasksTable = {
   id: string;
   customer_id: string;
   task: string;
-  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  taskstatus: 'pending' | 'done' | 'delayed' | 'cancelled';
   date: string;
 };
 
@@ -146,5 +146,5 @@ export type TaskForm = {
   id: string;
   customer_id: string;
   task: number;
-  status: 'pending' | 'done' | 'delayed' | 'cancelled';
+  taskstatus: 'pending' | 'done' | 'delayed' | 'cancelled';
 };

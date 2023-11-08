@@ -13,7 +13,7 @@ import { useFormState } from 'react-dom';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
     const initialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState(createTask, initialState);
+    const [stateTasks, dispatch] = useFormState(createTask, initialState);
 
     return (
         <form action={dispatch}>
@@ -43,13 +43,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                         <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
                     </div>
 
-                    {state.errors?.customerId ? (
+                    {stateTasks.errors?.customerId ? (
                         <div
                             id="customer-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.customerId.map((error: string) => (
+                            {stateTasks.errors.customerId.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
@@ -75,13 +75,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                         </div>
                     </div>
 
-                    {state.errors?.task ? (
+                    {stateTasks.errors?.task ? (
                         <div
                             id="task-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.task.map((error: string) => (
+                            {stateTasks.errors.task.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
@@ -98,7 +98,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="pending"
-                                    name="taskStatus"
+                                    name="taskstatus"
                                     type="radio"
                                     value="pending"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -113,7 +113,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="done"
-                                    name="taskStatus"
+                                    name="taskstatus"
                                     type="radio"
                                     value="done"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -128,7 +128,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="delayed"
-                                    name="taskStatus"
+                                    name="taskstatus"
                                     type="radio"
                                     value="delayed"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -143,7 +143,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             <div className="flex items-center">
                                 <input
                                     id="cancelled"
-                                    name="taskStatus"
+                                    name="taskstatus"
                                     type="radio"
                                     value="cancelled"
                                     className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
@@ -157,22 +157,22 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                             </div>
                         </div>
                     </div>
-                    {state.errors?.taskStatus ? (
+                    {stateTasks.errors?.taskstatus ? (
                         <div
-                            aria-describedby="taskStatus-error"
+                            aria-describedby="taskstatus-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.taskStatus.map((error: string) => (
+                            {stateTasks.errors.taskstatus.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
                     ) : null}
                 </fieldset>
 
-                {state.message ? (
+                {stateTasks.message ? (
                     <div aria-live="polite" className="my-2 text-sm text-red-500">
-                        <p>{state.message}</p>
+                        <p>{stateTasks.message}</p>
                     </div>
                 ) : null}
             </div>

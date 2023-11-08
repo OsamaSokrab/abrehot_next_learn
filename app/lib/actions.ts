@@ -158,7 +158,7 @@ export async function createTask(prevState: StateTasks, formData: FormData) {
   const validatedFields = CreateTask.safeParse({
     customerId: formData.get('customerId'),
     task: formData.get('task'),
-    taskstatus: formData.get('status'),
+    taskstatus: formData.get('taskstatus'),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -176,7 +176,7 @@ export async function createTask(prevState: StateTasks, formData: FormData) {
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO tasks (customer_id, title, status, date)
+      INSERT INTO tasks (customer_id, title, taskstatus, date)
       VALUES (${customerId}, ${task}, ${taskstatus}, ${date})
     `;
   } catch (error) {

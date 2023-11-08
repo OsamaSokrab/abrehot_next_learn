@@ -89,7 +89,7 @@ const tasks = [
   {
     customer_id: customers[1].id,
     task: 'abrehot',
-    status: 'done',
+    taskstatus: 'done',
     date: '2023-11-06',
   },
   {

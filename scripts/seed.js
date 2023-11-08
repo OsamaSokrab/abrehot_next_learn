@@ -179,7 +179,7 @@ async function seedTasks(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         customer_id UUID NOT NULL,
         task VARCHAR(255) NOT NULL,
-        status VARCHAR(255) NOT NULL,
+        taskstatus VARCHAR(255) NOT NULL,
         date DATE NOT NULL
       );
     `;

@@ -232,7 +232,7 @@ export async function fetchTasksPages(query: string) {
       customers.email ILIKE ${`%${query}%`} OR
       tasks.task ILIKE ${`%${query}%`} OR
       tasks.date::text ILIKE ${`%${query}%`} OR
-      tasks.status ILIKE ${`%${query}%`}
+      tasks.taskstatus ILIKE ${`%${query}%`}
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
@@ -305,7 +305,7 @@ export async function fetchTaskById(id: string) {
         tasks.id,
         tasks.customer_id,
         tasks.task,
-        tasks.status
+        tasks.taskstatus
       FROM tasks
       WHERE tasks.id = ${id};
     `;
@@ -386,7 +386,7 @@ export async function fetchFilteredTasks(
       tasks.id,
 		  tasks.task,
       tasks.date,
-		  tasks.status,
+		  tasks.taskstatus,
       customers.name,
       customers.email,
       customers.image_url
@@ -397,7 +397,7 @@ export async function fetchFilteredTasks(
 		  customers.email ILIKE ${`%${query}%`} OR
 		  tasks.task ILIKE ${`%${query}%`} OR
 		  tasks.date::text ILIKE ${`%${query}%`} OR
-		  tasks.status ILIKE ${`%${query}%`} 
+		  tasks.taskstatus ILIKE ${`%${query}%`} 
 		  ORDER BY tasks.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
@@ -415,7 +415,7 @@ export async function fetchTasks() {
     SELECT
 		  tasks.id,
 		  tasks.task,
-		  tasks.status,
+		  tasks.taskstatus,
 		  tasks.date
 		FROM tasks`;
     return tasks.rows;
