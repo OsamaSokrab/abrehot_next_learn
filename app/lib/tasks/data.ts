@@ -2,13 +2,49 @@ import { sql } from '@vercel/postgres';
 import {
   CustomerField,
   CustomersTable,
+  TasksForm,
   TasksTable,
-  TaskForm,
-} from './definitions';
+} from './definitions'
 import { formatCurrency } from '../utils';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
+
+export async function fetchFilteredTasks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const links = await sql<TasksTable>`
+      SELECT
+        tasks.id,
+        tasks.task,
+        tasks.status,
+        tasks.date,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM tasks
+      JOIN customers ON tasks.customer_id = customers.id
+      WHERE
+        customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        tasks.task ILIKE ${`%${query}%`} OR
+        tasks.status ILIKE ${`%${query}%`} OR
+        tasks.date ILIKE ${`%${query}%`} 
+      ORDER BY tasks.date, tasks.status, tasks.task 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return links.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch Tasks.');
+  }
+}
 
 export async function fetchTasksPages(query: string) {
   noStore();
@@ -20,39 +56,40 @@ export async function fetchTasksPages(query: string) {
       customers.name ILIKE ${`%${query}%`} OR
       customers.email ILIKE ${`%${query}%`} OR
       tasks.task ILIKE ${`%${query}%`} OR
-      tasks.date::text ILIKE ${`%${query}%`} OR
-      tasks.status ILIKE ${`%${query}%`}
+      tasks.status ILIKE ${`%${query}%`} OR
+      tasks.date ILIKE ${`%${query}%`} 
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of tasks.');
+    throw new Error('Failed to fetch total number of Tasks.');
   }
 }
 
 export async function fetchTaskById(id: string) {
   noStore();
   try {
-    const data = await sql<TaskForm>`
+    const data = await sql<TasksForm>`
       SELECT
         tasks.id,
         tasks.customer_id,
         tasks.task,
-        tasks.status
+        tasks.status,
+        tasks.date
       FROM tasks
       WHERE tasks.id = ${id};
     `;
 
     const task = data.rows.map((task) => ({
-      ...task,
+      ...task
     }));
 
     return task[0];
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch task.');
+    throw new Error('Failed to fetch Task.');
   }
 }
 
@@ -105,57 +142,5 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
-  }
-}
-
-export async function fetchFilteredTasks(
-  query: string,
-  currentPage: number,
-) {
-  noStore();
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  try {
-    const tasks = await sql<TasksTable>`
-		SELECT
-      tasks.id,
-		  tasks.task,
-      tasks.date,
-		  tasks.status,
-      customers.name,
-      customers.email,
-      customers.image_url
-		FROM tasks
-    JOIN customers ON tasks.customer_id = customers.id
-    WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-		  customers.email ILIKE ${`%${query}%`} OR
-		  tasks.task ILIKE ${`%${query}%`} OR
-		  tasks.date::text ILIKE ${`%${query}%`} OR
-		  tasks.status ILIKE ${`%${query}%`} 
-		  ORDER BY tasks.date DESC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-	  `;
-
-    return tasks.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch tasks.');
-  }
-}
-
-export async function fetchTasks() {
-  try {
-    const tasks = await sql`
-    SELECT
-		  tasks.id,
-		  tasks.task,
-		  tasks.status,
-		  tasks.date
-		FROM tasks`;
-    return tasks.rows;
-  } catch (error) {
-    console.error('Failed to fetch tasks:', error);
-    throw new Error('Failed to fetch tasks.');
   }
 }

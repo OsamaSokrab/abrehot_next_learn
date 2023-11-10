@@ -1,9 +1,10 @@
 'use client';
 
-import { CustomerField, TaskForm } from '@/app/lib/tasks/definitions';
+import { CustomerField, TasksForm } from '@/app/lib/tasks/definitions';
 import {
     CheckIcon,
     ClockIcon,
+    CurrencyDollarIcon,
     UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -11,16 +12,16 @@ import { Button } from '@/app/ui/button';
 import { updateTask } from '@/app/lib/tasks/actions';
 import { useFormState } from 'react-dom';
 
-export default function EditTaskForm({
-    task,
+export default function EditInvoiceForm({
+    link,
     customers,
 }: {
-    task: TaskForm;
+    link: TasksForm;
     customers: CustomerField[];
 }) {
     const initialState = { message: null, errors: {} };
-    const updateTaskWithId = updateTask.bind(null, task.id);
-    const [state, dispatch] = useFormState(updateTaskWithId, initialState);
+    const updateResourceWithId = updateTask.bind(null, link.id);
+    const [stateLink, dispatch] = useFormState(updateResourceWithId, initialState);
 
     return (
         <form action={dispatch}>
@@ -35,7 +36,7 @@ export default function EditTaskForm({
                             id="customer"
                             name="customerId"
                             className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                            defaultValue={task.customer_id}
+                            defaultValue=""
                             aria-describedby="customer-error"
                         >
                             <option value="" disabled>
@@ -50,140 +51,214 @@ export default function EditTaskForm({
                         <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
                     </div>
 
-                    {state.errors?.customerId ? (
+                    {stateLink.errors?.customerId ? (
                         <div
                             id="customer-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.customerId.map((error: string) => (
+                            {stateLink.errors.customerId.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
                     ) : null}
                 </div>
 
-                {/* Task Name */}
+                {/* Link Name */}
                 <div className="mb-4">
                     <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-                        Enter a task
+                        Enter A Task
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="task"
-                                name="task"
-                                type="text"
-                                defaultValue={task.task}
-                                placeholder="Enter a task"
+                                id="title"
+                                name="title"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                                aria-describedby="amount-error"
+                                aria-describedby="title-error"
                             />
                         </div>
                     </div>
 
-                    {state.errors?.task ? (
+                    {stateLink.errors?.title ? (
                         <div
-                            id="task-error"
+                            id="title-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.task.map((error: string) => (
+                            {stateLink.errors.title.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
                     ) : null}
                 </div>
 
-                {/* Task Status*/}
-                <fieldset>
-                    <legend className="mb-2 block text-sm font-medium">
-                        Set the Task status
-                    </legend>
-                    <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-                        <div className="flex gap-4">
-                            <div className="flex items-center">
-                                <input
-                                    id="pending"
-                                    name="status"
-                                    type="radio"
-                                    value="pending"
-                                    defaultChecked={task.status === 'pending'}
-                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-                                />
-                                <label
-                                    htmlFor="pending"
-                                    className="ml-2 flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300"
-                                >
-                                    Pending <ClockIcon className="h-4 w-4" />
-                                </label>
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    id="done"
-                                    name="status"
-                                    type="radio"
-                                    value="done"
-                                    defaultChecked={task.status === 'done'}
-                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-                                />
-                                <label
-                                    htmlFor="done"
-                                    className="ml-2 flex items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white dark:text-gray-300"
-                                >
-                                    Done <CheckIcon className="h-4 w-4" />
-                                </label>
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    id="delayed"
-                                    name="status"
-                                    type="radio"
-                                    value="delayed"
-                                    defaultChecked={task.status === 'delayed'}
-                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-                                />
-                                <label
-                                    htmlFor="delayed"
-                                    className="ml-2 flex items-center gap-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white dark:text-gray-300"
-                                >
-                                    Delayed <CheckIcon className="h-4 w-4" />
-                                </label>
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    id="cancelled"
-                                    name="status"
-                                    type="radio"
-                                    value="cancelled"
-                                    defaultChecked={task.status === 'cancelled'}
-                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-                                />
-                                <label
-                                    htmlFor="cancelled"
-                                    className="ml-2 flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white dark:text-gray-300"
-                                >
-                                    Cancelled <CheckIcon className="h-4 w-4" />
-                                </label>
-                            </div>
+                {/* Link Url */}
+                <div className="mb-4">
+                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+                        Enter Link Url
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="url"
+                                name="url"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
+                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby="url-error"
+                            />
                         </div>
                     </div>
-                    {state.errors?.status ? (
+
+                    {stateLink.errors?.url ? (
                         <div
-                            aria-describedby="status-error"
+                            id="url-error"
                             aria-live="polite"
                             className="mt-2 text-sm text-red-500"
                         >
-                            {state.errors.status.map((error: string) => (
+                            {stateLink.errors.url.map((error: string) => (
                                 <p key={error}>{error}</p>
                             ))}
                         </div>
                     ) : null}
-                </fieldset>
+                </div>
 
-                {state.message ? (
+                {/* Root */}
+                <div className="mb-4">
+                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+                        Enter Root Name
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="root"
+                                name="root"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
+                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby="root-error"
+                            />
+                        </div>
+                    </div>
+
+                    {stateLink.errors?.root ? (
+                        <div
+                            id="root-error"
+                            aria-live="polite"
+                            className="mt-2 text-sm text-red-500"
+                        >
+                            {stateLink.errors.root.map((error: string) => (
+                                <p key={error}>{error}</p>
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+
+                {/* Stem */}
+                <div className="mb-4">
+                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+                        Enter Link Name
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="stem"
+                                name="stem"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
+                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby="stem-error"
+                            />
+                        </div>
+                    </div>
+
+                    {stateLink.errors?.stem ? (
+                        <div
+                            id="stem-error"
+                            aria-live="polite"
+                            className="mt-2 text-sm text-red-500"
+                        >
+                            {stateLink.errors.stem.map((error: string) => (
+                                <p key={error}>{error}</p>
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+
+                {/* Branch */}
+                <div className="mb-4">
+                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+                        Enter Branch Name
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="branch"
+                                name="branch"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
+                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby="branch-error"
+                            />
+                        </div>
+                    </div>
+
+                    {stateLink.errors?.branch ? (
+                        <div
+                            id="branch-error"
+                            aria-live="polite"
+                            className="mt-2 text-sm text-red-500"
+                        >
+                            {stateLink.errors.branch.map((error: string) => (
+                                <p key={error}>{error}</p>
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+
+                {/* Leaf Name */}
+                <div className="mb-4">
+                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+                        Enter Leaf Name
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="leaf"
+                                name="leaf"
+                                type="string"
+                                step="0.01"
+                                placeholder="Enter link name"
+                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby="leaf-error"
+                            />
+                        </div>
+                    </div>
+
+                    {stateLink.errors?.leaf ? (
+                        <div
+                            id="leaf-error"
+                            aria-live="polite"
+                            className="mt-2 text-sm text-red-500"
+                        >
+                            {stateLink.errors.leaf.map((error: string) => (
+                                <p key={error}>{error}</p>
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+
+                {stateLink.message ? (
                     <div aria-live="polite" className="my-2 text-sm text-red-500">
-                        <p>{state.message}</p>
+                        <p>{stateLink.message}</p>
                     </div>
                 ) : null}
             </div>
@@ -194,7 +269,7 @@ export default function EditTaskForm({
                 >
                     Cancel
                 </Link>
-                <Button type="submit">Edit Invoice</Button>
+                <Button type="submit">Edit Link</Button>
             </div>
         </form>
     );

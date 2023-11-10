@@ -4,25 +4,25 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
 
 const FormSchema = z.object({
   id: z.string(),
   customerId: z.string({
     invalid_type_error: 'Please select a customer.',
   }),
-  task: z.string({ invalid_type_error: 'Please enter a task' }),
+  task: z.string({ invalid_type_error: 'Please enter a Task' }),
   status: z.enum(['pending', 'done', 'delayed', 'cancelled'], {
     invalid_type_error: 'Please select a task status'
   }),
   date: z.string(),
 });
 
-const CreateTask = FormSchema.omit({ id: true, date: true })
+const CreatTask = FormSchema.omit({ id: true, date: true })
 const UpdateTask = FormSchema.omit({ id: true, date: true })
 
 
-// This is temporary for tasks
+
+// This is temporary for resources
 export type State = {
   errors?: {
     customerId?: string[];
@@ -32,12 +32,13 @@ export type State = {
   message?: string | null;
 };
 
+
 export async function createTask(prevState: State, formData: FormData) {
   // Validate form fields using Zod
-  const validatedFields = CreateTask.safeParse({
+  const validatedFields = CreatTask.safeParse({
     customerId: formData.get('customerId'),
     task: formData.get('task'),
-    taskstatus: formData.get('taskstatus'),
+    status: formData.get('status'),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -55,7 +56,7 @@ export async function createTask(prevState: State, formData: FormData) {
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO tasks (customer_id, title, taskstatus, date)
+      INSERT INTO tasks (customer_id, task, status, date)
       VALUES (${customerId}, ${task}, ${status}, ${date})
     `;
   } catch (error) {
@@ -65,7 +66,7 @@ export async function createTask(prevState: State, formData: FormData) {
     };
   }
 
-  // Revalidate the cache for the invoices page and redirect the user.
+  // Revalidate the cache for the tasks page and redirect the user.
   revalidatePath('/dashboard/tasks');
   redirect('/dashboard/tasks');
 }
@@ -78,7 +79,7 @@ export async function updateTask(
   const validatedFields = UpdateTask.safeParse({
     customerId: formData.get('customerId'),
     task: formData.get('task'),
-    taskstatus: formData.get('taskstatus'),
+    status: formData.get('status'),
   });
 
   if (!validatedFields.success) {
@@ -89,15 +90,16 @@ export async function updateTask(
   }
 
   const { customerId, task, status } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
 
   try {
     await sql`
       UPDATE tasks
-      SET customer_id = ${customerId}, task = ${task}, taskstatus = ${status}
+      SET customer_id = ${customerId}, task = ${task}, status = ${status}, date = ${date}
       WHERE id = ${id}
     `;
   } catch (error) {
-    return { message: 'Database Error: Failed to Update Task.' };
+    return { message: 'Database Error: Failed to Update Tasks.' };
   }
 
   revalidatePath('/dashboard/tasks');
@@ -105,27 +107,13 @@ export async function updateTask(
 }
 
 export async function deleteTask(id: string) {
-  // throw new Error('Failed to Delete Task');
+  // throw new Error('Failed to Delete Invoice');
 
   try {
     await sql`DELETE FROM tasks WHERE id = ${id}`;
     revalidatePath('/dashboard/tasks');
-    return { message: 'Deleted Task' };
+    return { message: 'Deleted tasks' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Task.' };
-  }
-}
-
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
-  try {
-    await signIn('credentials', Object.fromEntries(formData));
-  } catch (error) {
-    if ((error as Error).message.includes('CredentialsSignin')) {
-      return 'CredentialsSignin';
-    }
-    throw error;
   }
 }

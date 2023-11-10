@@ -1,4 +1,4 @@
-import { fetchCustomers } from '@/app/lib/tasks/data';
+import { fetchCustomers } from '@/app/lib/data';
 import Form from '@/app/ui/tasks/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { Metadata } from 'next';
