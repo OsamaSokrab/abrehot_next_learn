@@ -1,4 +1,3 @@
-import { fetchFilteredTasks } from "@/app/lib/tasks/data";
 import BoardDelayed from "./board_delayed";
 import BoardDone from "./board_done";
 import BoardPending from "./board_pending";

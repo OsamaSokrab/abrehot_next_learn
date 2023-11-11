@@ -1,6 +1,5 @@
 import Pagination from '@/app/ui/tasks/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/tasks/table';
 import { CreateTask } from '@/app/ui/tasks/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { TasksTableSkeleton } from '@/app/ui/skeletons';
