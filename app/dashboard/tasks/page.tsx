@@ -7,6 +7,7 @@ import { TasksTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import { fetchTasksPages } from '@/app/lib/tasks/data';
 import { Metadata } from 'next';
+import Boards from '@/app/ui/tasks/boards/boards';
 
 export const metadata: Metadata = {
     title: 'Tasks',
@@ -35,7 +36,7 @@ export default async function Page({
                 <CreateTask />
             </div>
             <Suspense key={query + currentPage} fallback={<TasksTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} />
+                <Boards query={query} currentPage={currentPage} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
                 <Pagination totalPages={totalPages} />

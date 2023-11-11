@@ -36,7 +36,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.js",
-    "scripts/seed.js"
+    "scripts/seed.js",
+    "app/ui/tasks/boards/board_donetsx"
   ],
   "exclude": [
     "node_modules"
