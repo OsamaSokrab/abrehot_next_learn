@@ -268,6 +268,26 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
+const Patients = [
+  {
+    id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
+    first_name: 'Osama',
+    middle_name: 'Galaleldin Mohamed',
+    last_name: 'Ahmed',
+    age: 49,
+    gender: 'male',
+    marital_status: 'married',
+    occupation: 'doctor',
+    country: 'ethiopia',
+    state: 'addis_ababba',
+    city: 'addis_ababba',
+    area: 'arada',
+    street: 'hemen',
+    phone_number: '+251995404059',
+    education: 'postgraduate'
+  }
+]
+
 module.exports = {
   users,
   customers,
@@ -275,4 +295,5 @@ module.exports = {
   revenue,
   tasks,
   exLinks,
+  Patients,
 };

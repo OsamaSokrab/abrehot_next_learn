@@ -6,8 +6,10 @@ const {
   users,
   tasks,
   exLinks,
+  Patients,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
+const { sql } = require("@vercel/postgres");
 
 async function seedUsers(client) {
   try {
@@ -244,6 +246,53 @@ async function seedRevenue(client) {
   }
 }
 
+async function seedPatient(client) {
+  //Create table if not exist
+  try {
+    const createTable = client.sql`
+        CREATE TABLE IF NOT EXISTS patients (
+          id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+          first_name VARCHAR(255) NOT NULL,
+          middle_name VARCHAR(255) NOT NULL,
+          last_name VARCHAR(255) NOT NULL,
+          age INT NOT NULL,
+          gender VARCHAR(255) NOT NULL,
+          marital_status VARCHAR(255) NOT NULL,
+          occupation VARCHAR(255) NOT NULL,
+          country VARCHAR(255) NOT NULL,
+          state VARCHAR(255) NOT NULL,
+          city VARCHAR(255) NOT NULL,
+          area VARCHAR(255) NOT NULL,
+          street VARCHAR(255) NOT NULL,
+          phone_number VARCHAR(255) NOT NULL,
+          education VARCHAR(255) NOT NULL
+          
+        )
+      `
+    console.log('created table patients')
+
+    //Insert date into table patients
+    const insertedPatient = await Promise.all(
+      Patients.map((patient) => client.sql`
+    INSERT INTO patients (id, first_name, middle_name, last_name, age, gender, marital_status, occupation, country, state, city, area, street, phone_number, education )
+    VALUES(${patient.id}, ${patient.first_name},${patient.middle_name},${patient.last_name},${patient.age},${patient.gender},${patient.marital_status},${patient.occupation},${patient.country},${patient.state},${patient.city},${patient.area},${patient.street},${patient.phone_number},${patient.education})
+    ON CONFLICT (id) DO NOTHING
+    `,
+      ),
+    );
+    console.log(`inserted ${insertedPatient.length} patients`)
+
+    return {
+      createTable,
+      insertedPatient
+    }
+
+  } catch (error) {
+    console.error('Error seeding patients', error)
+    throw error
+  }
+}
+
 async function main() {
   const client = await db.connect();
 
@@ -253,6 +302,7 @@ async function main() {
   // await seedRevenue(client);
   // await seedTasks(client);
   // await seedExlinks(client);
+  await seedPatient(client)
 
   await client.end();
 }
