@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { UpdateTask, DeleteTask } from '@/app/ui/tasks/buttons';
 import { fetchFilteredCancelledTasks } from '@/app/lib/tasks/data';
 import { formatDateToLocal } from '@/app/lib/utils';
-import Status from '../status';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 
 export default async function BoardCancelled({
     query,
@@ -17,6 +17,7 @@ export default async function BoardCancelled({
         <div className='flex flex-col'>
             <h2 className='text-[1.2rem] font-500 inline-flex items-center rounded-full px-2 py-1 bg-red-500 text-white my-[1rem]'>
                 Cancelled
+                <XCircleIcon className="ml-1 w-4 text-white" />
             </h2>
             <div className='flex flex-col gap-[1.5rem]'>
                 {tasks?.map((task) => (

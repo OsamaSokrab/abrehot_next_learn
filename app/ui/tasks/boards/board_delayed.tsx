@@ -3,6 +3,7 @@ import { UpdateTask, DeleteTask } from '@/app/ui/tasks/buttons';
 import { fetchFilteredDelayedTasks } from '@/app/lib/tasks/data';
 import { formatDateToLocal } from '@/app/lib/utils';
 import Status from '../status';
+import { ArrowSmallRightIcon } from '@heroicons/react/24/outline';
 
 export default async function BoardDelayed({
     query,
@@ -17,6 +18,7 @@ export default async function BoardDelayed({
         <div className='flex flex-col'>
             <h2 className='text-[1.2rem] font-500 inline-flex items-center rounded-full px-2 py-1 bg-yellow-500 text-white my-[1rem]'>
                 Delayed
+                <ArrowSmallRightIcon className="ml-1 w-4 text-white" />
             </h2>
             <div className='flex flex-col gap-[1.5rem]'>
                 {tasks?.map((task) => (

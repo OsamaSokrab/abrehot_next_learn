@@ -258,25 +258,16 @@ export function ResourcesTableSkeleton() {
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  root
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  stem
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
-                >
-                  <span className="sr-only">Edit</span>
+                  branch
                 </th>
               </tr>
             </thead>

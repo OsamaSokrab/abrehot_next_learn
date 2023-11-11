@@ -7,9 +7,6 @@ import { redirect } from 'next/navigation';
 
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string({
-    invalid_type_error: 'Please select a customer.',
-  }),
   task: z.string({ invalid_type_error: 'Please enter a Task' }),
   status: z.enum(['pending', 'done', 'delayed', 'cancelled'], {
     invalid_type_error: 'Please select a task status'
@@ -25,7 +22,7 @@ const UpdateTask = FormSchema.omit({ id: true })
 // This is temporary for resources
 export type State = {
   errors?: {
-    customerId?: string[];
+    // customerId?: string[];
     task?: string[];
     status?: string[];
     date?: string[];
@@ -37,7 +34,7 @@ export type State = {
 export async function createTask(prevState: State, formData: FormData) {
   // Validate form fields using Zod
   const validatedFields = CreatTask.safeParse({
-    customerId: formData.get('customerId'),
+    // customerId: formData.get('customerId'),
     task: formData.get('task'),
     status: formData.get('status'),
     date: formData.get('date'),
@@ -52,13 +49,13 @@ export async function createTask(prevState: State, formData: FormData) {
   }
 
   // Prepare data for insertion into the database
-  const { customerId, task, status, date } = validatedFields.data;
+  const { task, status, date } = validatedFields.data;
 
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO tasks (customer_id, task, status, date)
-      VALUES (${customerId}, ${task}, ${status}, ${date})
+      INSERT INTO tasks (task, status, date)
+      VALUES (${task}, ${status}, ${date})
     `;
   } catch (error) {
     // If a database error occurs, return a more specific error.
@@ -78,7 +75,6 @@ export async function updateTask(
   formData: FormData,
 ) {
   const validatedFields = UpdateTask.safeParse({
-    customerId: formData.get('customerId'),
     task: formData.get('task'),
     status: formData.get('status'),
     date: formData.get('date'),
@@ -91,12 +87,12 @@ export async function updateTask(
     };
   }
 
-  const { customerId, task, status, date } = validatedFields.data;
+  const { task, status, date } = validatedFields.data;
 
   try {
     await sql`
       UPDATE tasks
-      SET customer_id = ${customerId}, task = ${task}, status = ${status}, date = ${date}
+      SET task = ${task}, status = ${status}, date = ${date}
       WHERE id = ${id}
     `;
   } catch (error) {
