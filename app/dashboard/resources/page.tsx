@@ -9,7 +9,7 @@ import { fetchResourcesPages } from '@/app/lib/resources/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'External Links',
+    title: 'Resources',
 };
 
 export default async function Page({
@@ -28,7 +28,7 @@ export default async function Page({
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
-                <h1 className={`${lusitana.className} text-2xl`}>External Links</h1>
+                <h1 className={`${lusitana.className} text-2xl`}>Resources</h1>
             </div>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Search invoices..." />

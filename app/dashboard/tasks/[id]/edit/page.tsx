@@ -1,4 +1,4 @@
-import Form from '@/app/ui/resources/edit-form';
+import Form from '@/app/ui/tasks/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchTaskById, fetchCustomers } from '@/app/lib/tasks/data';
 import { notFound } from 'next/navigation';
@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
-    const [link, customers] = await Promise.all([
+    const [task, customers] = await Promise.all([
         fetchTaskById(id),
         fetchCustomers(),
     ]);
 
-    if (!link) {
+    if (!task) {
         notFound();
     }
 
@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     },
                 ]}
             />
-            <Form link={link} customers={customers} />
+            <Form task={task} customers={customers} />
         </main>
     );
 }

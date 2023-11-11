@@ -18,7 +18,7 @@ export async function fetchFilteredTasks(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const links = await sql<TasksTable>`
+    const tasks = await sql<TasksTable>`
       SELECT
         tasks.id,
         tasks.task,
@@ -33,13 +33,12 @@ export async function fetchFilteredTasks(
         customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`} OR
         tasks.task ILIKE ${`%${query}%`} OR
-        tasks.status ILIKE ${`%${query}%`} OR
-        tasks.date ILIKE ${`%${query}%`} 
+        tasks.status ILIKE ${`%${query}%`}
       ORDER BY tasks.date, tasks.status, tasks.task 
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    return links.rows;
+    return tasks.rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch Tasks.');
@@ -56,8 +55,7 @@ export async function fetchTasksPages(query: string) {
       customers.name ILIKE ${`%${query}%`} OR
       customers.email ILIKE ${`%${query}%`} OR
       tasks.task ILIKE ${`%${query}%`} OR
-      tasks.status ILIKE ${`%${query}%`} OR
-      tasks.date ILIKE ${`%${query}%`} 
+      tasks.status ILIKE ${`%${query}%`} 
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);

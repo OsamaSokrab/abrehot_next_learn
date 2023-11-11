@@ -17,8 +17,8 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
-const CreatTask = FormSchema.omit({ id: true, date: true })
-const UpdateTask = FormSchema.omit({ id: true, date: true })
+const CreatTask = FormSchema.omit({ id: true })
+const UpdateTask = FormSchema.omit({ id: true })
 
 
 
@@ -28,6 +28,7 @@ export type State = {
     customerId?: string[];
     task?: string[];
     status?: string[];
+    date?: string[];
   };
   message?: string | null;
 };
@@ -39,6 +40,7 @@ export async function createTask(prevState: State, formData: FormData) {
     customerId: formData.get('customerId'),
     task: formData.get('task'),
     status: formData.get('status'),
+    date: formData.get('date'),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -50,8 +52,7 @@ export async function createTask(prevState: State, formData: FormData) {
   }
 
   // Prepare data for insertion into the database
-  const { customerId, task, status } = validatedFields.data;
-  const date = new Date().toISOString().split('T')[0];
+  const { customerId, task, status, date } = validatedFields.data;
 
   // Insert data into the database
   try {
@@ -80,6 +81,7 @@ export async function updateTask(
     customerId: formData.get('customerId'),
     task: formData.get('task'),
     status: formData.get('status'),
+    date: formData.get('date'),
   });
 
   if (!validatedFields.success) {
@@ -89,8 +91,7 @@ export async function updateTask(
     };
   }
 
-  const { customerId, task, status } = validatedFields.data;
-  const date = new Date().toISOString().split('T')[0];
+  const { customerId, task, status, date } = validatedFields.data;
 
   try {
     await sql`
