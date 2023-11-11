@@ -45,6 +45,146 @@ export async function fetchFilteredTasks(
   }
 }
 
+export async function fetchFilteredDoneTasks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const tasks = await sql<TasksTable>`
+      SELECT
+        tasks.id,
+        tasks.task,
+        tasks.status,
+        tasks.date,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM tasks
+      JOIN customers ON tasks.customer_id = customers.id
+      WHERE
+        tasks.status = 'done' AND
+        (customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        tasks.task ILIKE ${`%${query}%`})
+      ORDER BY tasks.date, tasks.status, tasks.task 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return tasks.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch Tasks.');
+  }
+}
+
+export async function fetchFilteredPendingTasks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const tasks = await sql<TasksTable>`
+      SELECT
+        tasks.id,
+        tasks.task,
+        tasks.status,
+        tasks.date,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM tasks
+      JOIN customers ON tasks.customer_id = customers.id
+      WHERE
+        tasks.status = 'pending' AND
+        (customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        tasks.task ILIKE ${`%${query}%`})
+      ORDER BY tasks.date, tasks.status, tasks.task 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return tasks.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch Tasks.');
+  }
+}
+
+export async function fetchFilteredCancelledTasks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const tasks = await sql<TasksTable>`
+      SELECT
+        tasks.id,
+        tasks.task,
+        tasks.status,
+        tasks.date,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM tasks
+      JOIN customers ON tasks.customer_id = customers.id
+      WHERE
+        tasks.status = 'cancelled' AND
+        (customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        tasks.task ILIKE ${`%${query}%`})
+      ORDER BY tasks.date, tasks.status, tasks.task 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return tasks.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch Tasks.');
+  }
+}
+
+export async function fetchFilteredDelayedTasks(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const tasks = await sql<TasksTable>`
+      SELECT
+        tasks.id,
+        tasks.task,
+        tasks.status,
+        tasks.date,
+        customers.name,
+        customers.email,
+        customers.image_url
+      FROM tasks
+      JOIN customers ON tasks.customer_id = customers.id
+      WHERE
+        tasks.status = 'delayed' AND
+        (customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        tasks.task ILIKE ${`%${query}%`})
+      ORDER BY tasks.date, tasks.status, tasks.task 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return tasks.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch Tasks.');
+  }
+}
+
 export async function fetchTasksPages(query: string) {
   noStore();
   try {

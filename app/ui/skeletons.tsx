@@ -336,16 +336,16 @@ export function TasksTableSkeleton() {
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  pending
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  done
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  delayed
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  cancelled
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
