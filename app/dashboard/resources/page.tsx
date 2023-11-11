@@ -1,6 +1,6 @@
 import Pagination from '@/app/ui/resources/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/resources/table';
+import Cards from '@/app/ui/resources/cards';
 import { CreateResource } from '@/app/ui/resources/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { ResourcesTableSkeleton } from '@/app/ui/skeletons';
@@ -35,7 +35,7 @@ export default async function Page({
                 <CreateResource />
             </div>
             <Suspense key={query + currentPage} fallback={<ResourcesTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} />
+                <Cards query={query} currentPage={currentPage} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
                 <Pagination totalPages={totalPages} />
