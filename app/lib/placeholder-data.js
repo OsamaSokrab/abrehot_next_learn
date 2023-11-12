@@ -276,7 +276,7 @@ const Patients = [
     last_name: 'Ahmed',
     age: 49,
     gender: 'male',
-    marital_status: 'married',
+    mardaital_status: 'married',
     occupation: 'doctor',
     country: 'ethiopia',
     state: 'addis_ababba',
