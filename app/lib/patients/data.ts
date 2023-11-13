@@ -1,5 +1,9 @@
 import { Patient } from "./definitions"
 import { sql } from "@vercel/postgres"
+import {
+    PatientForm,
+    PatientCards,
+} from './definitions'
 import { unstable_noStore as noStore } from "next/cache"
 
 export async function fetchPatients() {
@@ -25,7 +29,7 @@ export async function fetchFilteredPatients(
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
     try {
-        const data = await sql<Patient>`
+        const patients = await sql<PatientForm>`
         SELECT  
         first_name,
         middle_name,
@@ -46,7 +50,7 @@ export async function fetchFilteredPatients(
         first_name ILIKE ${`%${query}%`} OR
         middle_name ILIKE ${`%${query}%`} OR
         last_name ILIKE ${`%${query}%`} OR
-        age ILIKE ${`%${query}%`} OR
+        age::text ILIKE ${`%${query}%`} OR
         gender ILIKE ${`%${query}%`} OR
         marital_status ILIKE ${`%${query}%`} OR
         occupation ILIKE ${`%${query}%`} OR
@@ -58,14 +62,10 @@ export async function fetchFilteredPatients(
         phone_number ILIKE ${`%${query}%`} OR
         education ILIKE ${`%${query}%`}
 
-        ORDERBY first_name ASC
+        ORDER BY first_name ASC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
         `
-
-        const patients = data.rows.map((patient) => ({
-            ...patient
-        }))
-
-        return patients
+        return patients.rows
     } catch (err) {
         console.error('Database error', err)
         throw new Error('Failed to fetch patients table')
@@ -82,7 +82,7 @@ export async function fetchPatientPages(query: string) {
         first_name ILIKE ${`%${query}%`} OR
         middle_name ILIKE ${`%${query}%`} OR
         last_name ILIKE ${`%${query}%`} OR
-        age ILIKE ${`%${query}%`} OR
+        age::text ILIKE ${`%${query}%`} OR
         gender ILIKE ${`%${query}%`} OR
         marital_status ILIKE ${`%${query}%`} OR
         occupation ILIKE ${`%${query}%`} OR

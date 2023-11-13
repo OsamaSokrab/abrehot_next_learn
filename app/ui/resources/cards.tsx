@@ -39,11 +39,9 @@ export default async function ResourcesCards({
                                 {link.title}
                             </a>
                         </h2>
-                        <div className="whitespace-nowrap py-3 pl-6 pr-3">
-                            <div className="flex items-center gap-[0.5rem] border[#E2E8F0]">
-                                <UpdateResource id={link.id} />
-                                <DeleteResource id={link.id} />
-                            </div>
+                        <div className="flex gap-[1rem] mt-[2rem]">
+                            <UpdateResource id={link.id} />
+                            <DeleteResource id={link.id} />
                         </div>
                     </div>
                 </div>

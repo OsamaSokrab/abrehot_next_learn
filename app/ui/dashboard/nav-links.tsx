@@ -6,6 +6,7 @@ import {
   DocumentDuplicateIcon,
   RectangleStackIcon,
   LinkIcon,
+  FaceFrownIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ const links = [
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Tasks', href: '/dashboard/tasks', icon: RectangleStackIcon },
   { name: 'Resources', href: '/dashboard/resources', icon: LinkIcon },
+  { name: 'Patients', href: '/dashboard/patients', icon: FaceFrownIcon },
 ];
 
 export default function NavLinks() {
